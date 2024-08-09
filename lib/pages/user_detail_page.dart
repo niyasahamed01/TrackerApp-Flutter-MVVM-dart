@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../models/user.dart';
 
 class UserDetailPage extends StatelessWidget {
-
   final User user;
 
   const UserDetailPage({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
+    final DateTime dob = DateTime.parse(user.dobDate);
+    final String formattedDob = DateFormat('MMMM dd, yyyy').format(dob);
+
+    final DateTime reg = DateTime.parse(user.registeredDate);
+    final String formattedReg = DateFormat('MMMM dd, yyyy').format(reg);
 
     return Scaffold(
       appBar: AppBar(
@@ -30,7 +35,8 @@ class UserDetailPage extends StatelessWidget {
               const SizedBox(height: 16),
               Text(
                 'Name: ${user.title} ${user.firstName} ${user.lastName}',
-                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const Divider(height: 32, color: Colors.grey),
               const SizedBox(height: 8),
@@ -69,12 +75,12 @@ class UserDetailPage extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                'Date of Birth: ${user.dobDate}',
+                'Date of Birth: $formattedDob',
                 style: const TextStyle(fontSize: 18),
               ),
               const SizedBox(height: 8),
               Text(
-                'Registered: ${user.registeredDate}',
+                'Registered: $formattedReg',
                 style: const TextStyle(fontSize: 18),
               ),
               const SizedBox(height: 8),
@@ -101,7 +107,8 @@ class UserDetailPage extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                'Password: ${user.password}',  // Note: Displaying password in plain text is not secure and should be avoided in real applications
+                'Password: ${user.password}',
+                // Note: Displaying password in plain text is not secure and should be avoided in real applications
                 style: const TextStyle(fontSize: 18),
               ),
               const SizedBox(height: 4),

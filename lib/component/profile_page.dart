@@ -3,10 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:trackapp/component/DetailPage.dart';
+import 'package:trackapp/component/detail_page.dart';
 
 class ProfilePage extends StatefulWidget {
-
   const ProfilePage({super.key});
 
   @override
@@ -52,13 +51,12 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _pickImage(ImageSource source) async {
-
     PermissionStatus permissionStatus;
 
     if (source == ImageSource.camera) {
       permissionStatus = await Permission.camera.request();
     } else if (source == ImageSource.gallery) {
-      permissionStatus = await Permission.photos.request(); // Use photos permission
+      permissionStatus = await Permission.photos.request();
     } else {
       return;
     }
@@ -77,29 +75,27 @@ class _ProfilePageState extends State<ProfilePage> {
     } else if (permissionStatus.isDenied) {
       _showPermissionDeniedDialog();
     } else if (permissionStatus.isPermanentlyDenied) {
-      _showPermissionDeniedDialog();
+      _showPermissionDeniedDialog(permanentlyDenied: true);
     }
   }
 
-  void _showPermissionDeniedDialog() {
+  void _showPermissionDeniedDialog({bool permanentlyDenied = false}) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Permission Denied'),
-        content: const Text('Please grant the necessary permissions in settings.'),
+        content: Text(permanentlyDenied
+            ? 'Permission has been permanently denied. Please grant it in the settings.'
+            : 'Please grant the necessary permissions to proceed.'),
         actions: <Widget>[
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
-              openAppSettings(); // Opens app settings to grant permissions manually
+              if (permanentlyDenied) {
+                openAppSettings();
+              }
             },
-            child: const Text('Settings'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text('Cancel'),
+            child: Text(permanentlyDenied ? 'Settings' : 'OK'),
           ),
         ],
       ),
@@ -154,8 +150,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-      ),
+      appBar: AppBar(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
@@ -165,14 +160,15 @@ class _ProfilePageState extends State<ProfilePage> {
               Center(
                 child: _image == null
                     ? CircleAvatar(
-                  radius: 80,
-                  backgroundColor: Colors.grey[300],
-                  child: Icon(Icons.camera_alt, size: 50, color: Colors.grey[600]),
-                )
+                        radius: 80,
+                        backgroundColor: Colors.grey[300],
+                        child: Icon(Icons.camera_alt,
+                            size: 50, color: Colors.grey[600]),
+                      )
                     : CircleAvatar(
-                  radius: 80,
-                  backgroundImage: FileImage(_image!),
-                ),
+                        radius: 80,
+                        backgroundImage: FileImage(_image!),
+                      ),
               ),
               const SizedBox(height: 16),
               ElevatedButton(
@@ -205,16 +201,15 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () {
-                  _navigateToSearchPage();
-                },
+                onPressed: _navigateToSearchPage,
                 child: const Text('Send to Detail Page'),
               ),
             ],
           ),
         ),
       ),
-      resizeToAvoidBottomInset: true, // Ensures the content adjusts when keyboard appears
+      resizeToAvoidBottomInset:
+          true, // Ensures the content adjusts when keyboard appears
     );
   }
 }

@@ -4,16 +4,15 @@ import 'dart:convert';
 import '../models/user.dart';
 
 class UserViewModel with ChangeNotifier {
-
   List<User> _users = [];
   bool _isLoading = false;
   int _page = 1;
 
   List<User> get users => _users;
+
   bool get isLoading => _isLoading;
 
   Future<void> fetchUsers({bool isRefresh = false}) async {
-
     if (isRefresh) {
       _page = 1;
       _users = [];
@@ -22,11 +21,13 @@ class UserViewModel with ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    final response = await http.get(Uri.parse('https://randomuser.me/api/?page=$_page&results=25'));
+    final response = await http
+        .get(Uri.parse('https://randomuser.me/api/?page=$_page&results=25'));
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      final List<User> fetchedUsers = (data['results'] as List).map((user) => User.fromJson(user)).toList();
+      final List<User> fetchedUsers =
+          (data['results'] as List).map((user) => User.fromJson(user)).toList();
       _users.addAll(fetchedUsers);
       _page++;
     } else {

@@ -9,17 +9,19 @@ class DetailPage extends StatelessWidget {
   final File? image;
 
   const DetailPage({
-    Key? key,
+    super.key,
     this.name = '',
     this.address = '',
     this.details = '',
     this.image,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: const Text('Detail Page'),
+        backgroundColor: Colors.blue,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -29,14 +31,15 @@ class DetailPage extends StatelessWidget {
             Center(
               child: image == null
                   ? CircleAvatar(
-                radius: 80,
-                backgroundColor: Colors.grey[300],
-                child: Icon(Icons.camera_alt, size: 50, color: Colors.grey[600]),
-              )
+                      radius: 80,
+                      backgroundColor: Colors.grey[300],
+                      child: Icon(Icons.camera_alt,
+                          size: 50, color: Colors.grey[600]),
+                    )
                   : CircleAvatar(
-                radius: 80,
-                backgroundImage: FileImage(image!),
-              ),
+                      radius: 80,
+                      backgroundImage: FileImage(image!),
+                    ),
             ),
             const SizedBox(height: 16),
             Text(
